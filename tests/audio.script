@@ -1,0 +1,49 @@
+# PWM audio test: verifies the slave-SH2 PWM sound engine produces
+# audible output for the game's sound effects, and stays silent when
+# nothing should be playing.
+
+# power-on ramp settles quickly; the title-screen gatesound effect
+# must be audible during the title sequence
+run 60
+audio_reset
+run 180
+assert_audio 3000
+
+# menu with no input: starfield only, PWM should idle at center
+# (silence - anything above a tiny noise floor is a bug)
+run 300
+audio_reset
+run 60
+assert_silence 800
+
+# menu click effect on difficulty change
+audio_reset
+press RIGHT 3
+run 30
+assert_audio 1500
+
+# in-game: fire sound on shooting
+press START 5
+run 30
+press B 5
+run 10
+audio_reset
+press B 3
+run 30
+assert_audio 3000
+
+# smart bomb: explosion sample is loud
+audio_reset
+press C 3
+run 40
+assert_audio 5000
+
+# record a short WAV artifact of mixed effects for manual listening
+wav_start tests/artifacts/sfx_demo.wav
+press B 3
+run 25
+press B 3
+run 25
+press C 3
+run 60
+wav_stop

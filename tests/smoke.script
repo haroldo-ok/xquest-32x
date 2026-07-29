@@ -1,0 +1,13 @@
+# Smoke test: boot the ROM and make sure it never shows a black screen.
+# Title screen appears within a couple of seconds of boot.
+run 240
+shot tests/artifacts/boot_title.ppm
+assert_notblack 8
+# after title delay, menu appears (or still title); either way non-black
+run 300
+shot tests/artifacts/menu.ppm
+assert_notblack 8
+snap
+run 30
+# menu/starfield renders and screen is alive
+assert_notblack 8

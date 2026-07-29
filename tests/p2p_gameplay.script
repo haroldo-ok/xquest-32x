@@ -1,0 +1,65 @@
+# Point-to-point test: boot -> title -> menu -> game -> gameplay actions.
+# Fails if any screen along the way is black/uniform or frozen.
+
+# 1. Boot to title picture (fade-in region)
+run 120
+shot tests/artifacts/p2p_title.ppm
+assert_notblack 8
+
+# 2. Title -> menu (title auto-advances after ~3s or on button)
+press B 3
+run 60
+shot tests/artifacts/p2p_menu.ppm
+assert_notblack 8
+
+# 3. Menu responds to input: change difficulty
+snap
+press RIGHT 3
+run 5
+assert_changed
+
+# 4. Start game -> READY window appears
+press START 5
+run 30
+shot tests/artifacts/p2p_ready.ppm
+assert_notblack 10
+
+# 5. Dismiss READY -> playfield with HUD, stars, mines, crystals
+press B 5
+run 10
+shot tests/artifacts/p2p_level1.ppm
+assert_notblack 10
+
+# 6. Game is alive: frames keep changing (enemy release, timers)
+snap
+run 60
+assert_changed
+
+# 7. Ship responds to input: move + shoot
+press RIGHT 8
+press B 3
+run 8
+shot tests/artifacts/p2p_shoot.ppm
+assert_notblack 10
+snap
+press LEFT 8
+run 30
+assert_changed
+
+# 8. Pause window (START) and resume
+press START 3
+run 20
+shot tests/artifacts/p2p_pause.ppm
+assert_notblack 8
+press B 3
+run 30
+assert_notblack 10
+
+# 9. Smart bomb (C) triggers screen flash + HUD update, game continues
+press C 3
+run 30
+shot tests/artifacts/p2p_bomb.ppm
+assert_notblack 8
+snap
+run 60
+assert_changed

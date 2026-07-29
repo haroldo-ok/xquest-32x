@@ -1,0 +1,56 @@
+# Soak test: play for ~2 minutes of emulated time with continuous input.
+# Ensures no crash, no freeze and never a black screen.
+run 420
+press START 5
+run 30
+press B 5
+run 10
+
+# wiggle around while firing for ~30s emulated
+press RIGHT 20
+press B 4
+press UP 20
+press B 4
+press LEFT 20
+press B 4
+press DOWN 20
+press B 4
+run 120
+assert_notblack 10
+snap
+press RIGHT 20
+press B 4
+press UP 20
+press B 4
+run 240
+assert_changed
+assert_notblack 10
+
+press LEFT 30
+press B 4
+press DOWN 30
+press B 4
+run 600
+assert_notblack 10
+snap
+press RIGHT 20
+press B 10
+run 600
+assert_changed
+assert_notblack 8
+shot tests/artifacts/soak_end.ppm
+
+# keep running with no input: ship may die, explosion/gameover/ready
+# screens must still render (not black) and machine must not hang.
+# (If the ship died, the game legitimately parks at a static READY /
+# GAME OVER prompt - so press a button before asserting liveness.)
+run 1800
+assert_notblack 8
+press B 5
+run 30
+press B 5
+snap
+run 300
+assert_changed
+shot tests/artifacts/soak_idle.ppm
+assert_notblack 8
