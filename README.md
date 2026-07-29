@@ -10,6 +10,8 @@ status bar). This port re-implements the gameplay in C for the 32X's
 SH2 CPUs, and converts all the original data files (sprites, fonts,
 palettes, enemy stats, level tables, digitized sounds) at build time.
 
+Original source: https://www.dosgamesarchive.com/file/xquest/xquest_13_src
+
 ## The ROM
 
 ```
